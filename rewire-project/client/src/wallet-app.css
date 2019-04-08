@@ -24,7 +24,7 @@ body, html {
   color: white;
 }
 
-.wallet-app-container {
+.container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,8 +32,23 @@ body, html {
   max-width: 500px;
   min-height: 100%;
   min-width: 360px;
-  margin: 20px auto;
+  margin: 0 auto;
   padding: 10px;
   border: 2px solid #1d5987;
   box-shadow: 0 5px 10px rgba(197, 219, 236, .6);
+}
+
+.user-data {
+  margin-top: 20px;
+  border-bottom: none;
+  background: #1d5987;
+  display: block;
+  color: white;
+  font-weight: bold;
+}
+
+.current-balance {
+  text-decoration: underline;
+  background: gold;
+  color: black;
 }

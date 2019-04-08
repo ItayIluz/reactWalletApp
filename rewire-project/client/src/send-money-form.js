@@ -16,23 +16,17 @@ class SendMoneyForm extends Component {
       return (
         <form onSubmit={this.handleSubmit}>
           <div className="form-field-title">
-            Enter recipient and amount
+            Fill this form to send money:
           </div>
           <div className="form-field-container">
-            <label>
-              Receiver:
-              <input type="text" className="form-field-input"/>
-            </label>
+            <label htmlFor="form-receiver-input">Receiver:</label>
+              <input id="form-receiver-input" type="text" className="form-field-input"/>
           </div>
           <div className="form-field-container">
-            <label>
-              Amount:
-              <input type="text" className="form-field-input"/>
-            </label>
+            <label htmlFor="form-amount-input">Amount (in {this.props.currency}):</label>
+              <input id="form-amount-input" type="text" className="form-field-input"/>
           </div>
-          <div className="form-field-container">
-            <input type="submit" value="Submit" />
-          </div>
+            <input className="form-submit-button" type="submit" value="Submit" />
         </form>
       );
     }
