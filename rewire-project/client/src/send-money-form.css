@@ -1,0 +1,29 @@
+
+.form-field-container {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    padding: 5px;
+    margin: 5px;
+}
+
+.form-field-title {
+    font-weight: bold;
+    text-decoration: underline;
+    padding: 5px;
+}
+
+.form-field-input {
+    margin: 0 10px;
+    border-radius: 5px;
+    border: 1px solid #bebebe;
+    box-sizing: border-box;
+    transition: all 0.3s ease-in-out;
+    outline: none;
+    padding: 3px;
+}
+
+.form-field-input:focus{
+	box-shadow: 0 0 5px rgb(136, 170, 233);
+	border: 1px solid rgb(136, 170, 233);
+}
