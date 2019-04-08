@@ -20,14 +20,6 @@ class WalletApp extends Component {
         result => result.json().then(resultObject => this.setState({currentBalance: resultObject.balance})),
         error => console.log(error)
       );
-
-      fetch('/api/world', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ post: "test" }),
-      }).then(result => console.log(result.json().then(result=>console.log(result))));
   }
 
   render() {
@@ -42,7 +34,8 @@ class WalletApp extends Component {
         </div>
         <div className="container form-container">
           <SendMoneyForm 
-          currency={this.state.currency}/>
+          currency={this.state.currency}
+          senderID={this.state.userID}/>
         </div>
       </div>
     );

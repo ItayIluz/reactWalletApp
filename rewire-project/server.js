@@ -10,7 +10,8 @@ const con = mysql.createConnection({
   host: "remotemysql.com",
   database: "pcam5R13Uq",
   user: "pcam5R13Uq",
-  password: "dxdIdkEHVO"
+  password: "dxdIdkEHVO",
+  multipleStatements: true
 });
 
 let dbConnected = false;
@@ -24,25 +25,50 @@ con.connect(function(error) {
   }
 });
 
+function queryDBIfConnected(connectedCallback){
+  if(dbConnected)
+    connectedCallback();
+  else
+  console.log("Error! There was a problem connecting to the MySQL database."); // Handle connection error
+}
+
 app.get('/api/balance/:id', (req, res) => {
 
-  if(dbConnected){
-   con.query("SELECT balance FROM `user_details` WHERE id=?", req.params.id, (error, results, fields) => {
+  queryDBIfConnected(() => {
+   con.query("SELECT balance FROM `user_details` WHERE id=?", req.params.id, (error, results) => {
       if(error) {
         console.log(error);
       } else {
          res.send({ balance: results[0].balance });
       }
     });
-  }
-
+  });
 });
 
-app.post('/api/world', (req, res) => {
-  console.log(req.body);
-  res.send(
-    {a:"a", b:"c", "c":true}
-  );
+app.post('/api/send', (req, res) => {
+  let amountToSend = parseFloat(req.body.amountToSend),
+  receiverUsername = req.body.receiverUsername,
+  senderID = req.body.senderID;
+
+  queryDBIfConnected(() => {
+    
+    con.query("UPDATE `user_details` SET balance=(balance+?) WHERE username=?;" +
+              "UPDATE `user_details` SET balance=(balance-?) WHERE id=?;" +
+              "INSERT INTO `transaction_history` (from_user_id, to_user_id, amount,transaction_datetime) VALUES" +
+              "(?,(SELECT id FROM `user_details` WHERE username=?),?, NOW())", 
+    [amountToSend, receiverUsername, 
+     amountToSend, senderID,
+      senderID, receiverUsername, amountToSend],
+     error => {
+      let resultToSend = { result: ""};
+       if(error) {
+         resultToSend.result = "ERROR " + error;
+       } else {
+          resultToSend.result = "SUCCESS";
+       }
+       res.send(resultToSend);
+     });
+   });
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
