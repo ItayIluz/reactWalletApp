@@ -11,15 +11,31 @@ class WalletApp extends Component {
       name: "Itay Iluz",
       currentBalance: 0,
       currency: "₪",
+      hidePopupDialog: true
     }
+
+    this.updateUserBalance = this.updateUserBalance.bind(this);
   }
 
   componentDidMount() {
-    fetch("/api/balance/" + this.state.userID)
+    this.getUserBalance()
       .then(
-        result => result.json().then(resultObject => this.setState({currentBalance: resultObject.balance})),
+        resultObject => this.setState({currentBalance: resultObject.balance}),
         error => console.log(error)
       );
+  }
+
+  async getUserBalance(){
+    const response = await fetch("/api/balance/" + this.state.userID);
+    const responseObject = await response.json();
+
+    if (response.status !== 200) throw Error(responseObject.message);
+
+    return responseObject;
+  }
+
+  updateUserBalance(toSubtract){
+    this.setState({currentBalance: this.state.currentBalance - toSubtract});
   }
 
   render() {
@@ -34,8 +50,10 @@ class WalletApp extends Component {
         </div>
         <div className="container form-container">
           <SendMoneyForm 
-          currency={this.state.currency}
-          senderID={this.state.userID}/>
+            currency={this.state.currency}
+            senderID={this.state.userID}
+            afterSubmit={this.updateUserBalance}
+          />
         </div>
       </div>
     );

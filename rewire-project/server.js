@@ -45,30 +45,46 @@ app.get('/api/balance/:id', (req, res) => {
   });
 });
 
-app.post('/api/send', (req, res) => {
-  let amountToSend = parseFloat(req.body.amountToSend),
-  receiverUsername = req.body.receiverUsername,
-  senderID = req.body.senderID;
+  app.post('/api/send', (req, res) => {
+    let amountToSend = parseFloat(req.body.amountToSend),
+    receiverUsername = req.body.receiverUsername,
+    senderID = req.body.senderID;
 
-  queryDBIfConnected(() => {
-    
-    con.query("UPDATE `user_details` SET balance=(balance+?) WHERE username=?;" +
-              "UPDATE `user_details` SET balance=(balance-?) WHERE id=?;" +
-              "INSERT INTO `transaction_history` (from_user_id, to_user_id, amount,transaction_datetime) VALUES" +
-              "(?,(SELECT id FROM `user_details` WHERE username=?),?, NOW())", 
-    [amountToSend, receiverUsername, 
-     amountToSend, senderID,
-      senderID, receiverUsername, amountToSend],
-     error => {
-      let resultToSend = { result: ""};
-       if(error) {
-         resultToSend.result = "ERROR " + error;
-       } else {
-          resultToSend.result = "SUCCESS";
-       }
-       res.send(resultToSend);
-     });
-   });
-});
+    queryDBIfConnected(() => {
+      
+      con.query("UPDATE `user_details` SET balance=(balance+?) WHERE username=?;" +
+                "UPDATE `user_details` SET balance=(balance-?) WHERE id=?;" +
+                "INSERT INTO `transaction_history` (from_user_id, to_user_id, amount,transaction_datetime) VALUES" +
+                "(?,(SELECT id FROM `user_details` WHERE username=?),?, NOW())", 
+      [amountToSend, receiverUsername, 
+      amountToSend, senderID,
+        senderID, receiverUsername, amountToSend],
+      error => {
+        let resultToSend = { result: ""};
+        if(error) {
+          resultToSend.result = "ERROR " + error;
+        } else {
+            resultToSend.result = "SUCCESS";
+        }
+        res.send(resultToSend);
+      });
+    });
+  });
+
+  app.get('/api/history/:id', (req, res) => {
+
+    queryDBIfConnected(() => {
+     con.query("SELECT `user_details`.name, amount, transaction_datetime" + 
+              "FROM `transaction_history` LEFT JOIN `user_details` ON (`user_details`.id = `transaction_history`.`to_user_id`)" + 
+              "WHERE from_user_id=?", req.params.id, 
+        (error, results) => {
+        if(error) {
+          console.log(error);
+        } else {
+           res.send({ userTransactionHistory: results });
+        }
+      });
+    });
+  });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

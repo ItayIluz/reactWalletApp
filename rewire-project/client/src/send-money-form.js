@@ -8,6 +8,7 @@ class SendMoneyForm extends Component {
       this.state = {
         receiverUsername: "",
         amountToSend: "",
+        submitResult: ""
       }
 
       this.handleInputChange = this.handleInputChange.bind(this);
@@ -23,10 +24,10 @@ class SendMoneyForm extends Component {
       });
     }
 
-    handleSubmit(event) {
+    async handleSubmit(event) {
       event.preventDefault();
 
-      fetch('/api/send', {
+      const response = await fetch('/api/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,9 +37,17 @@ class SendMoneyForm extends Component {
           receiverUsername: this.state.receiverUsername,
           amountToSend: this.state.amountToSend
         }),
-      }).then(result => {
-          console.log(result.json().then(result=>console.log(result)));
       });
+      
+      const reponseResult = await response.json(); 
+
+      if (response.status !== 200) throw Error(reponseResult.message);
+
+      if(reponseResult.result === "SUCCESS"){
+        this.setState({submitResult: "Transaction commited successfully!"})
+        this.props.afterSubmit(this.state.amountToSend);
+      }
+        
     }
      
     render() {
@@ -65,6 +74,9 @@ class SendMoneyForm extends Component {
               id="form-submit-button" className="form-submit-button" type="submit" value="Submit"
               onSubmit={this.handleSubmit}
             />
+          <div className="form-field-container submit-result">
+            {this.state.submitResult}
+          </div>
         </form>
       );
     }
