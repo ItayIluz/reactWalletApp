@@ -1,3 +1,6 @@
+.send-money-form {
+    width: 100%;
+}
 
 .form-field-container {
     display: flex;
@@ -33,8 +36,30 @@
     margin: 10px;
     font-weight: bold;
     border-radius: 5px;
-    border: none;
-    background:#bebebe;
+    border: 2px solid #bebebe;
+    background: #bebebe;
     color: black;
     text-align: center;
+}
+
+.form-submit-button:hover {
+    border: 2px groove #88aae9;
+}
+
+.form-submit-button:active {
+    border: 2px groove #88aae9;
+    background: #88aae9;
+}
+
+.submit-result {
+    font-weight: bold;
+    transition: color 1s ease-in-out;
+    transition: background-color 0.7s ease-in-out;
+    background: #1d5987;
+    color: white;
+}
+
+.submit-result.hidden {
+    background: white;
+    color: white;
 }
