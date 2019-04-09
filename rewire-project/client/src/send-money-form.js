@@ -147,7 +147,7 @@ class SendMoneyForm extends Component {
                 value={this.state.amountToSend} onChange={this.handleInputChange}
               />
           </div>
-            <button id="form-submit-button" className="wallet-app-button" onClick={this.handleSend}>
+            <button id="form-send-button" className="wallet-app-button" onClick={this.handleSend}>
               Send
             </button>
             <button id="form-get-history-button" className="wallet-app-button" onClick={this.handleGetHistory}>
