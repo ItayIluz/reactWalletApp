@@ -68,7 +68,11 @@ class SendMoneyForm extends Component {
       if (response.status !== 200) throw Error(responseObject.message);
   
       if(responseObject.result === "SUCCESS"){
-        finalResult = "Fetched transaction history.";
+        finalResult = "Fetched transaction history."
+
+        if(responseObject.userTransactionHistory.length === 0)
+          finalResult += " No transactions.";
+
         this.setState({transactionHistory: responseObject.userTransactionHistory});
       } else {
         finalResult = "Get history failed!";
