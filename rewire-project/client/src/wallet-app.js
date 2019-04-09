@@ -18,11 +18,7 @@ class WalletApp extends Component {
   }
 
   componentDidMount() {
-    this.getUserBalance()
-      .then(
-        resultObject => this.setState({currentBalance: resultObject.balance}),
-        error => console.log(error)
-      );
+    this.updateUserBalance();
   }
 
   async getUserBalance(){
@@ -34,8 +30,12 @@ class WalletApp extends Component {
     return responseObject;
   }
 
-  updateUserBalance(toSubtract){
-    this.setState({currentBalance: this.state.currentBalance - toSubtract});
+  updateUserBalance(){
+    this.getUserBalance()
+      .then(
+        resultObject => this.setState({currentBalance: resultObject.balance}),
+        error => console.log(error)
+      );
   }
 
   render() {
