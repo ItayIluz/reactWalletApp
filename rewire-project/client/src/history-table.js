@@ -3,6 +3,7 @@ import './history-table.css';
 
 class HistoryTable extends Component {
 
+    // Format datetime
     formatDatetime(dateTime){
       dateTime = dateTime.split("T");
       let date = dateTime[0].split("-"),
@@ -12,9 +13,11 @@ class HistoryTable extends Component {
         time = dateTime[1].split(":"),
         h = time[0],
         m = time[1];
+        
       return dd + '-' + mm + '-' + yyyy + " " + h + ":" + m;
     }
 
+    // Populate the table with data based on the received data from the parent component
     createTable() {
       let table = []
       let dataArray = this.props.data;

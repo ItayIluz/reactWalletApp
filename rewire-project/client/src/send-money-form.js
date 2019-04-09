@@ -15,18 +15,20 @@ class SendMoneyForm extends Component {
       }
 
       this.handleInputChange = this.handleInputChange.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleSend = this.handleSend.bind(this);
       this.handleGetHistory = this.handleGetHistory.bind(this);
       this.checkForFormErrors = this.checkForFormErrors.bind(this);
       this.updateInputResultMessage = this.updateInputResultMessage.bind(this);
       this.closeTable = this.closeTable.bind(this);
     }
 
+    // Close the transaction history table
     closeTable(event){
       event.preventDefault();
       this.setState({transactionHistory:[]});
     }
   
+    // Update state properties based on the input fields
     handleInputChange(event) {
       const value = event.target.value;
       const name = event.target.name;
@@ -55,6 +57,7 @@ class SendMoneyForm extends Component {
       return "";
     }
 
+    // Get history, update success/error message and show table
     async handleGetHistory(event){
       event.preventDefault();
       let finalResult = "";
@@ -75,10 +78,12 @@ class SendMoneyForm extends Component {
       this.updateInputResultMessage(finalResult)
     }
 
-    async handleSubmit(event) {
+    // Validate and send data to server and show a message based on the results
+    async handleSend(event) {
       event.preventDefault();
       let finalResult = this.checkForFormErrors();
 
+      // If there are no validation errors, post data to the server
       if(finalResult === ""){
         const response = await fetch('/api/send', {
           method: 'POST',
@@ -138,8 +143,8 @@ class SendMoneyForm extends Component {
                 value={this.state.amountToSend} onChange={this.handleInputChange}
               />
           </div>
-            <button id="form-submit-button" className="wallet-app-button" onClick={this.handleSubmit}>
-              Submit
+            <button id="form-submit-button" className="wallet-app-button" onClick={this.handleSend}>
+              Send
             </button>
             <button id="form-get-history-button" className="wallet-app-button" onClick={this.handleGetHistory}>
               Get Transaction History
