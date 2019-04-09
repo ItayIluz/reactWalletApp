@@ -1,0 +1,23 @@
+.table-container {
+    margin-top: 10px;
+}
+
+.table-container.hidden {
+    display: none;
+}
+
+.history-table{
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+.history-table th {
+    color: white;
+    background: #1d5987;
+    padding: 3px 5px;
+}
+
+.history-table td{
+    border: 1px solid #bebebe;
+    padding: 3px 5px;
+}

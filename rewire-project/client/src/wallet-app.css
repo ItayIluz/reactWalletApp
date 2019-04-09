@@ -10,6 +10,9 @@ body, html {
 
 .wallet-app {
   text-align: center;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
 }
 
 .wallet-app-header {
@@ -51,4 +54,25 @@ body, html {
   text-decoration: underline;
   background: gold;
   color: black;
+}
+
+
+.wallet-app-button {
+  padding: 5px 20px;
+  margin: 10px;
+  font-weight: bold;
+  border-radius: 5px;
+  border: 2px solid #bebebe;
+  background: #bebebe;
+  color: black;
+  text-align: center;
+}
+
+.wallet-app-button:hover {
+  border: 2px groove #88aae9;
+}
+
+.wallet-app-button:active {
+  border: 2px groove #88aae9;
+  background: #88aae9;
 }

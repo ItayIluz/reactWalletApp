@@ -31,27 +31,7 @@
 	border: 1px solid rgb(136, 170, 233);
 }
 
-.form-submit-button {
-    padding: 5px 20px;
-    margin: 10px;
-    font-weight: bold;
-    border-radius: 5px;
-    border: 2px solid #bebebe;
-    background: #bebebe;
-    color: black;
-    text-align: center;
-}
-
-.form-submit-button:hover {
-    border: 2px groove #88aae9;
-}
-
-.form-submit-button:active {
-    border: 2px groove #88aae9;
-    background: #88aae9;
-}
-
-.submit-result {
+.input-result {
     font-weight: bold;
     transition: color 1s ease-in-out;
     transition: background-color 0.7s ease-in-out;
@@ -59,7 +39,7 @@
     color: white;
 }
 
-.submit-result.hidden {
+.input-result.hidden {
     background: white;
     color: white;
 }

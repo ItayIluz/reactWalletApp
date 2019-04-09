@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import HistoryTable from './history-table.js';
 import './send-money-form.css';
 
 class SendMoneyForm extends Component {
@@ -8,12 +9,22 @@ class SendMoneyForm extends Component {
       this.state = {
         receiverUsername: "",
         amountToSend: "",
-        submitResult: ""
+        inputResult: "",
+        messageTimeoutID: -1,
+        transactionHistory: []
       }
 
       this.handleInputChange = this.handleInputChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleGetHistory = this.handleGetHistory.bind(this);
       this.checkForFormErrors = this.checkForFormErrors.bind(this);
+      this.updateInputResultMessage = this.updateInputResultMessage.bind(this);
+      this.closeTable = this.closeTable.bind(this);
+    }
+
+    closeTable(event){
+      event.preventDefault();
+      this.setState({transactionHistory:[]});
     }
   
     handleInputChange(event) {
@@ -44,6 +55,26 @@ class SendMoneyForm extends Component {
       return "";
     }
 
+    async handleGetHistory(event){
+      event.preventDefault();
+      let finalResult = "";
+
+      const response = await fetch("/api/history/" + this.props.userID);
+      const responseObject = await response.json();
+  
+      if (response.status !== 200) throw Error(responseObject.message);
+  
+      if(responseObject.result === "SUCCESS"){
+        finalResult = "Fetched transaction history.";
+        this.setState({transactionHistory: responseObject.userTransactionHistory});
+      } else {
+        finalResult = "Get history failed!";
+        console.log(responseObject.result);
+      }
+
+      this.updateInputResultMessage(finalResult)
+    }
+
     async handleSubmit(event) {
       event.preventDefault();
       let finalResult = this.checkForFormErrors();
@@ -55,7 +86,7 @@ class SendMoneyForm extends Component {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ 
-            senderID: this.props.senderID,
+            userID: this.props.userID,
             receiverUsername: this.state.receiverUsername,
             amountToSend: this.state.amountToSend
           }),
@@ -74,12 +105,22 @@ class SendMoneyForm extends Component {
         this.setState({receiverUsername: "", amountToSend: ""})
       }
 
-      this.setState({submitResult: finalResult});
+      this.updateInputResultMessage(finalResult)
     }
-     
+
+    // Update the submit result and hide it after 3 seconds
+    updateInputResultMessage(message){
+      this.setState({inputResult: message});
+      if(this.state.messageTimeoutID !== -1)
+        clearTimeout(this.state.messageTimeoutID);
+
+      let messageTimeout = setTimeout(() => this.setState({inputResult: "", messageTimeoutID: -1}), 3000);
+      this.setState({messageTimeoutID: messageTimeout});
+    }
+
     render() {
       return (
-        <form className="send-money-form" onSubmit={this.handleSubmit}>
+        <form className="send-money-form">
           <div className="form-field-title">
             Fill this form to send money:
           </div>
@@ -97,13 +138,21 @@ class SendMoneyForm extends Component {
                 value={this.state.amountToSend} onChange={this.handleInputChange}
               />
           </div>
-            <input 
-              id="form-submit-button" className="form-submit-button" type="submit" value="Submit"
-              onSubmit={this.handleSubmit}
-            />
-          <div className={"submit-result" + (this.state.submitResult === "" ? " hidden" : "")}>
-            {this.state.submitResult}
+            <button id="form-submit-button" className="wallet-app-button" onClick={this.handleSubmit}>
+              Submit
+            </button>
+            <button id="form-get-history-button" className="wallet-app-button" onClick={this.handleGetHistory}>
+              Get Transaction History
+            </button>
+          <div className={"input-result" + (this.state.inputResult === "" ? " hidden" : "")}>
+            {this.state.inputResult}
           </div>
+          <HistoryTable 
+            data={this.state.transactionHistory} 
+            currency={this.props.currency} 
+            hidden={this.state.transactionHistory.length === 0}
+            closeTable={this.closeTable}
+          />
         </form>
       );
     }

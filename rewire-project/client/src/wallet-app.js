@@ -51,7 +51,7 @@ class WalletApp extends Component {
         <div className="container form-container">
           <SendMoneyForm 
             currency={this.state.currency}
-            senderID={this.state.userID}
+            userID={this.state.userID}
             afterSubmit={this.updateUserBalance}
           />
         </div>
